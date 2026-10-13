@@ -1,0 +1,299 @@
+$ bun --bun vitest run tests/promo-content.test.jsx
+
+ RUN  v5.0.3 /home/stellabot/Projects/codebase/github/feezit/softitrend-feezit-office-frontend
+
+ ❯ tests/promo-content.test.jsx (11 tests | 1 failed) 2959ms
+   × prévisualise une image de réservation sans rendre le texte HTML 364ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/promo-content.test.jsx > prévisualise une image de réservation sans rendre le texte HTML
+TestingLibraryElementError: Unable to find an accessible element with the role "img" and name "Aperçu de l’article"
+
+Here are the accessible roles:
+
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"muted"[39m
+  [36m/>[39m
+
+  --------------------------------------------------group:
+
+  Name "":
+  [36m<fieldset />[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "Compte propriétaire (UUID)":
+  [36m<input[39m
+    [33mautocomplete[39m=[32m"off"[39m
+    [33mmaxlength[39m=[32m"300"[39m
+    [33mname[39m=[32m"ownerId"[39m
+    [33mpattern[39m=[32m"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"[39m
+    [33mplaceholder[39m=[32m"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"[39m
+    [33mrequired[39m=[32m""[39m
+    [33mtype[39m=[32m"text"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Marque":
+  [36m<input[39m
+    [33mautocomplete[39m=[32m"off"[39m
+    [33mmaxlength[39m=[32m"300"[39m
+    [33mname[39m=[32m"store"[39m
+    [33mrequired[39m=[32m""[39m
+    [33mtype[39m=[32m"text"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Code":
+  [36m<input[39m
+    [33mautocomplete[39m=[32m"off"[39m
+    [33mmaxlength[39m=[32m"80"[39m
+    [33mname[39m=[32m"code"[39m
+    [33mrequired[39m=[32m""[39m
+    [33mtype[39m=[32m"text"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Article":
+  [36m<input[39m
+    [33mautocomplete[39m=[32m"off"[39m
+    [33mmaxlength[39m=[32m"300"[39m
+    [33mname[39m=[32m"articleName"[39m
+    [33mrequired[39m=[32m""[39m
+    [33mtype[39m=[32m"text"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Description de l’article":
+  [36m<textarea[39m
+    [33mmaxlength[39m=[32m"2000"[39m
+    [33mname[39m=[32m"articleDescription"[39m
+  [36m/>[39m
+
+  Name "Image de l’article (URL)":
+  [36m<input[39m
+    [33mautocomplete[39m=[32m"off"[39m
+    [33mmaxlength[39m=[32m"2000"[39m
+    [33mname[39m=[32m"articleImage"[39m
+    [33mpattern[39m=[32m"https?://.+"[39m
+    [33mtype[39m=[32m"url"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Catégorie":
+  [36m<input[39m
+    [33mautocomplete[39m=[32m"off"[39m
+    [33mmaxlength[39m=[32m"300"[39m
+    [33mname[39m=[32m"category"[39m
+    [33mrequired[39m=[32m""[39m
+    [33mtype[39m=[32m"text"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Destination":
+  [36m<input[39m
+    [33mautocomplete[39m=[32m"off"[39m
+    [33mmaxlength[39m=[32m"2000"[39m
+    [33mname[39m=[32m"destinationUrl"[39m
+    [33mrequired[39m=[32m""[39m
+    [33mtype[39m=[32m"url"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Référence de l’accord":
+  [36m<input[39m
+    [33mautocomplete[39m=[32m"off"[39m
+    [33mmaxlength[39m=[32m"300"[39m
+    [33mname[39m=[32m"agreementReference"[39m
+    [33mrequired[39m=[32m""[39m
+    [33mtype[39m=[32m"text"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Version des documents":
+  [36m<input[39m
+    [33mautocomplete[39m=[32m"off"[39m
+    [33mmaxlength[39m=[32m"300"[39m
+    [33mname[39m=[32m"documentVersion"[39m
+    [33mrequired[39m=[32m""[39m
+    [33mtype[39m=[32m"text"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Préparer une réservation":
+  [36m<button[39m
+    [33mclass[39m=[32m"primary"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<form[39m
+  [33maria-label[39m=[32m"Préparer une réservation"[39m
+[36m>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"muted"[39m
+  [36m>[39m
+    [0mAccord explicite et validation du contenu reçus par email, après examen humain. Les codes restent strictement inchangés.[0m
+  [36m</p>[39m
+  [36m<fieldset>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"form-grid"[39m
+    [36m>[39m
+      [36m<label>[39m
+        [0mCompte propriétaire (UUID)[0m
+        [36m<input[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mmaxlength[39m=[32m"300"[39m
+          [33mname[39m=[32m"ownerId"[39m
+          [33mpattern[39m=[32m"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"[39m
+          [33mplaceholder[39m=[32m"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"text"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mMarque[0m
+        [36m<input[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mmaxlength[39m=[32m"300"[39m
+          [33mname[39m=[32m"store"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"text"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mCode[0m
+        [36m<input[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mmaxlength[39m=[32m"80"[39m
+          [33mname[39m=[32m"code"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"text"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mArticle[0m
+        [36m<input[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mmaxlength[39m=[32m"300"[39m
+          [33mname[39m=[32m"articleName"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"text"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mDescription de l’article[0m
+        [36m<textarea[39m
+          [33mmaxlength[39m=[32m"2000"[39m
+          [33mname[39m=[32m"articleDescription"[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mImage de l’article (URL)[0m
+        [36m<input[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mmaxlength[39m=[32m"2000"[39m
+          [33mname[39m=[32m"articleImage"[39m
+          [33mpattern[39m=[32m"https?://.+"[39m
+          [33mtype[39m=[32m"url"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mCatégorie[0m
+        [36m<input[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mmaxlength[39m=[32m"300"[39m
+          [33mname[39m=[32m"category"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"text"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mDestination[0m
+        [36m<input[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mmaxlength[39m=[32m"2000"[39m
+          [33mname[39m=[32m"destinationUrl"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"url"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mAccord reçu le (UTC)[0m
+        [36m<input[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mmaxlength[39m=[32m"300"[39m
+          [33mname[39m=[32m"agreementReceivedAt"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"datetime-local"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mRéférence de l’accord[0m
+        [36m<input[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mmaxlength[39m=[32m"300"[39m
+          [33mname[39m=[32m"agreementReference"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"text"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mVersion des documents[0m
+        [36m<input[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mmaxlength[39m=[32m"300"[39m
+          [33mname[39m=[32m"documentVersion"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"text"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+    [36m</div>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"primary"[39m
+    [36m>[39m
+      [0mPréparer une réservation[0m
+    [36m</button>[39m
+  [36m</fieldset>[39m
+[36m</form>[39m
+ ❯ getElementError node_modules/@testing-library/dom/dist/config.js:37:23
+ ❯ <anonymous> node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ <anonymous> node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ <anonymous> node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ tests/promo-content.test.jsx:111:15
+    109|   const form = within(await screen.findByRole("form", { name: "Prépare…
+    110|   await userEvent.type(form.getByLabelText("Image de l’article (URL)")…
+    111|   expect(form.getByRole("img", { name: "Aperçu de l’article" })).toHav…
+       |               ^
+    112|   await userEvent.clear(form.getByLabelText("Image de l’article (URL)"…
+    113|   expect(form.queryByRole("img")).not.toBeInTheDocument();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 passed (11)
+   Start at  20:48:57
+   Duration  4.42s (tests 69%, environment 15%, transform 8%, setup 6%, import 2%)
+
+error: "vitest" exited with code 1
+error: script "test" exited with code 1

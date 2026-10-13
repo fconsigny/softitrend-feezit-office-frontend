@@ -1,0 +1,12 @@
+$ bun --bun vitest run
+
+ RUN  v5.0.3 /home/stellabot/Projects/codebase/github/feezit/softitrend-feezit-office-frontend
+
+
+ Test Files  11 passed (11)
+      Tests  52 passed (52)
+   Start at  21:00:08
+   Duration  29.08s (tests 61%, environment 24%, setup 10%, transform 2%, import 2%)
+
+    Isolate  11 workers spawned · ~732ms startup each (spawn + environment, per file)
+             at least ~7.32s faster with isolate: false — reuses workers across files instead of one per file

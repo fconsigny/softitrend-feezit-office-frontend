@@ -1,0 +1,30 @@
+$ bun --bun playwright test tests/browser/promo-content.spec.js
+[WebServer] $ bun --bun vite
+
+Running 1 test using 1 worker
+
+  ✘  1 tests/browser/promo-content.spec.js:4:0 › contenu éditable, aperçu externe borné sans référent et URL conservée après échec (1.3s)
+
+
+  1) tests/browser/promo-content.spec.js:4:0 › contenu éditable, aperçu externe borné sans référent et URL conservée après échec 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 240
+    Received:    1200
+
+      34 |   await expect(image).toHaveAttribute("referrerpolicy", "no-referrer");
+      35 |   const size = await image.boundingBox();
+    > 36 |   expect(size.height).toBeLessThanOrEqual(240);
+         |                      ^
+      37 |   expect(size.width).toBeLessThanOrEqual(320);
+      38 |   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      39 |   const form = editor.getByRole("form", { name: "Modifier le contenu de l’offre" });
+        at /home/stellabot/Projects/codebase/github/feezit/softitrend-feezit-office-frontend/tests/browser/promo-content.spec.js:36:22
+
+    Error Context: test-results/promo-content-contenu-édit-ab978-t-URL-conservée-après-échec/error-context.md
+
+  1 failed
+    tests/browser/promo-content.spec.js:4:0 › contenu éditable, aperçu externe borné sans référent et URL conservée après échec 
+error: "playwright" exited with code 1
+error: script "test:browser" exited with code 1

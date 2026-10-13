@@ -1,0 +1,156 @@
+$ bun --bun vitest run tests/reservations.test.jsx
+
+ RUN  v5.0.3 /home/stellabot/Projects/codebase/github/feezit/softitrend-feezit-office-frontend
+
+ ❯ tests/reservations.test.jsx (2 tests | 1 failed) 1057ms
+   × réserve seulement après accord et réponse serveur, sans publication, puis restitue le conflit 696ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/reservations.test.jsx > réserve seulement après accord et réponse serveur, sans publication, puis restitue le conflit
+TestingLibraryElementError: Unable to find a label with the text of: Description de l’article
+
+Ignored nodes: comments, script, style
+[36m<form[39m
+  [33maria-label[39m=[32m"Préparer une réservation"[39m
+[36m>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"muted"[39m
+  [36m>[39m
+    [0mAccord explicite et validation du contenu reçus par email, après examen humain. Les codes restent strictement inchangés.[0m
+  [36m</p>[39m
+  [36m<fieldset>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"form-grid"[39m
+    [36m>[39m
+      [36m<label>[39m
+        [0mCompte propriétaire (UUID)[0m
+        [36m<input[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mmaxlength[39m=[32m"300"[39m
+          [33mname[39m=[32m"ownerId"[39m
+          [33mpattern[39m=[32m"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"[39m
+          [33mplaceholder[39m=[32m"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"text"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mMarque[0m
+        [36m<input[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mmaxlength[39m=[32m"300"[39m
+          [33mname[39m=[32m"store"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"text"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mCode[0m
+        [36m<input[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mmaxlength[39m=[32m"80"[39m
+          [33mname[39m=[32m"code"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"text"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mArticle[0m
+        [36m<input[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mmaxlength[39m=[32m"300"[39m
+          [33mname[39m=[32m"articleName"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"text"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mCatégorie[0m
+        [36m<input[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mmaxlength[39m=[32m"300"[39m
+          [33mname[39m=[32m"category"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"text"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mDestination[0m
+        [36m<input[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mmaxlength[39m=[32m"2000"[39m
+          [33mname[39m=[32m"destinationUrl"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"url"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mAccord reçu le (UTC)[0m
+        [36m<input[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mmaxlength[39m=[32m"300"[39m
+          [33mname[39m=[32m"agreementReceivedAt"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"datetime-local"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mRéférence de l’accord[0m
+        [36m<input[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mmaxlength[39m=[32m"300"[39m
+          [33mname[39m=[32m"agreementReference"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"text"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mVersion des documents[0m
+        [36m<input[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mmaxlength[39m=[32m"300"[39m
+          [33mname[39m=[32m"documentVersion"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"text"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+    [36m</div>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"primary"[39m
+    [36m>[39m
+      [0mPréparer une réservation[0m
+    [36m</button>[39m
+  [36m</fieldset>[39m
+[36m</form>[39m
+ ❯ getElementError node_modules/@testing-library/dom/dist/config.js:37:23
+ ❯ getAllByLabelText node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ <anonymous> node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ <anonymous> node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ tests/reservations.test.jsx:33:31
+     31|   };
+     32|   for (const [label, value] of Object.entries(values))
+     33|     await userEvent.type(form.getByLabelText(label), value);
+       |                               ^
+     34|   await userEvent.click(
+     35|     form.getByRole("button", { name: "Préparer une réservation" }),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  20:40:17
+   Duration  2.55s (tests 44%, environment 29%, transform 13%, setup 12%, import 2%)
+
+error: "vitest" exited with code 1
+error: script "test" exited with code 1

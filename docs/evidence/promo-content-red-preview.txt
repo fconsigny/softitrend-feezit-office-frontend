@@ -1,0 +1,185 @@
+$ bun --bun vitest run tests/promo-content.test.jsx
+
+ RUN  v5.0.3 /home/stellabot/Projects/codebase/github/feezit/softitrend-feezit-office-frontend
+
+ ❯ tests/promo-content.test.jsx (3 tests | 1 failed) 1096ms
+   × prévisualise uniquement HTTP(S) sans référent et garde l’URL visible après échec 387ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/promo-content.test.jsx > prévisualise uniquement HTTP(S) sans référent et garde l’URL visible après échec
+TestingLibraryElementError: Unable to find an accessible element with the role "img" and name "Aperçu de l’article"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Contenu de l’offre":
+  [36m<h2 />[39m
+
+  --------------------------------------------------paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"notice"[39m
+  [36m/>[39m
+
+  --------------------------------------------------paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"promo-description"[39m
+  [36m/>[39m
+
+  --------------------------------------------------paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------form:
+
+  Name "Modifier le contenu de l’offre":
+  [36m<form[39m
+    [33maria-label[39m=[32m"Modifier le contenu de l’offre"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  group:
+
+  Name "":
+  [36m<fieldset />[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "Description de l’article":
+  [36m<textarea[39m
+    [33mmaxlength[39m=[32m"2000"[39m
+    [33mname[39m=[32m"articleDescription"[39m
+  [36m/>[39m
+
+  Name "Image de l’article (URL)":
+  [36m<input[39m
+    [33mmaxlength[39m=[32m"2000"[39m
+    [33mname[39m=[32m"articleImage"[39m
+    [33mpattern[39m=[32m"https?://.+"[39m
+    [33mtype[39m=[32m"url"[39m
+    [33mvalue[39m=[32m"https://images.example.test/a.png"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"muted"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Enregistrer le contenu":
+  [36m<button[39m
+    [33mclass[39m=[32m"primary"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-label[39m=[32m"Contenu de l’offre"[39m
+  [33mclass[39m=[32m"panel"[39m
+[36m>[39m
+  [36m<h2>[39m
+    [0mContenu de l’offre[0m
+  [36m</h2>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"notice"[39m
+  [36m>[39m
+    [0mCette modification ne publie pas l’offre et ne lève aucune modération. Code, marque et dates restent inchangés.[0m
+  [36m</p>[39m
+  [36m<p>[39m
+    [0mOffre [0m
+    [0m22222222-2222-4222-8222-222222222222[0m
+    [0m · [0m
+    [0mAcme[0m
+    [0m · [0m
+    [0mMiXeD[0m
+    [0m · [0m
+    [0mMasqué[0m
+  [36m</p>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"promo-description"[39m
+  [36m>[39m
+    [0mTexte &lt;b&gt;non HTML&lt;/b&gt;[0m
+  [36m</p>[39m
+  [36m<p>[39m
+    [0mhttps://images.example.test/a.png[0m
+  [36m</p>[39m
+  [36m<form[39m
+    [33maria-label[39m=[32m"Modifier le contenu de l’offre"[39m
+  [36m>[39m
+    [36m<fieldset>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"form-grid"[39m
+      [36m>[39m
+        [36m<label>[39m
+          [0mDescription de l’article[0m
+          [36m<textarea[39m
+            [33mmaxlength[39m=[32m"2000"[39m
+            [33mname[39m=[32m"articleDescription"[39m
+          [36m>[39m
+            [0mTexte &lt;b&gt;non HTML&lt;/b&gt;[0m
+          [36m</textarea>[39m
+        [36m</label>[39m
+        [36m<label>[39m
+          [0mImage de l’article (URL)[0m
+          [36m<input[39m
+            [33mmaxlength[39m=[32m"2000"[39m
+            [33mname[39m=[32m"articleImage"[39m
+            [33mpattern[39m=[32m"https?://.+"[39m
+            [33mtype[39m=[32m"url"[39m
+            [33mvalue[39m=[32m"https://images.example.test/a.png"[39m
+          [36m/>[39m
+        [36m</label>[39m
+      [36m</div>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"muted"[39m
+      [36m>[39m
+        [0mChamps facultatifs. Laisser vide efface la description ou l’image.[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"primary"[39m
+      [36m>[39m
+        [0mEnregistrer le contenu[0m
+      [36m</button>[39m
+    [36m</fieldset>[39m
+  [36m</form>[39m
+[36m</section>[39m
+ ❯ getElementError node_modules/@testing-library/dom/dist/config.js:37:23
+ ❯ <anonymous> node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ <anonymous> node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ <anonymous> node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ tests/promo-content.test.jsx:34:84
+     32|   setup();
+     33|   const form = await editor();
+     34|   const image = within(screen.getByRole("region", { name: "Contenu de …
+       |                                                                                    ^
+     35|   expect(image).toHaveAttribute("src", original.articleImage);
+     36|   expect(image).toHaveAttribute("referrerpolicy", "no-referrer");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  20:43:29
+   Duration  2.45s (tests 48%, environment 27%, transform 12%, setup 11%, import 3%)
+
+error: "vitest" exited with code 1
+error: script "test" exited with code 1

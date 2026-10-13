@@ -1,0 +1,10 @@
+
+Running 3 tests using 1 worker
+
+  ✓  1 tests/browser/office.spec.js:81:2 › navigation complète et formulaires accessibles · desktop (1.7s)
+  ✓  2 tests/browser/office.spec.js:81:2 › navigation complète et formulaires accessibles · mobile (1.5s)
+  ✓  3 tests/browser/promo-content.spec.js:4:0 › contenu éditable, aperçu externe borné sans référent et URL conservée après échec (1.1s)
+
+  3 passed (6.3s)
+$ bun --bun playwright test
+[WebServer] $ bun --bun vite

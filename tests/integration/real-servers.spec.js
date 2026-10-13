@@ -1,0 +1,81 @@
+import {test, expect} from '@playwright/test';
+import fs from 'node:fs';
+const fixture = JSON.parse(fs.readFileSync(process.env.OFFICE_INTEGRATION_FIXTURE, 'utf8'));
+// Synthetic accounts on real, isolated Java servers. No route mocks.
+test('connexion, huit écrans, réservation confirmée, conflit et déconnexion · vrais serveurs', async ({page}) => {
+ const errors=[]; page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('/');
+ await expect(page.getByRole('heading',{name:'Connexion opérateur'})).toBeVisible();
+ await page.getByLabel('Identifiant Office').fill('operator-smoke');
+ await page.getByLabel('Mot de passe',{exact:true}).fill('synthetic-smoke-password-only');
+ await page.getByRole('button',{name:'Se connecter',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'Tableau de bord',exact:true})).toBeVisible();
+ for (const label of ['Comptes','Offres & réservations','Marques & alias','Liste d’attente','Modération','Statistiques','Notifications']) {
+  await page.getByRole('navigation').getByRole('link',{name:label,exact:true}).click();
+  await expect(page.getByRole('heading',{name:label,exact:true})).toBeVisible();
+  await expect(page.getByRole('alert')).toHaveCount(0);
+ }
+ await page.getByRole('navigation').getByRole('link',{name:'Statistiques',exact:true}).click();
+ await page.getByLabel('Compte propriétaire (UUID)').fill(fixture.statsOwnerId);
+ await page.getByRole('button',{name:'Consulter',exact:true}).click();
+ const measures=page.locator('section').filter({has:page.getByRole('heading',{name:'Mesures quotidiennes'})});
+ await expect(measures.getByText('feezit-events',{exact:true})).toBeVisible();
+ await expect(measures.locator('.metrics strong')).toHaveText(['1','1']);
+ await page.getByRole('navigation').getByRole('link',{name:'Liste d’attente',exact:true}).click();
+ await page.getByLabel('Marque à consulter').fill('Isolated brand');
+ await page.getByRole('form',{name:'Consulter l’attente'}).getByRole('button',{name:'Consulter',exact:true}).click();
+ await expect(page.getByRole('cell',{name:'Waiting synthetic',exact:true})).toBeVisible();
+ await expect(page.getByRole('cell',{name:'synthetic-email-response',exact:true})).toBeVisible();
+ await page.getByRole('navigation').getByRole('link',{name:'Notifications',exact:true}).click();
+ await expect(page.getByRole('cell',{name:'En attente d’émission',exact:true}).first()).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Confirmation manuelle indisponible',exact:true})).toBeVisible();
+ await expect(page.getByRole('link',{name:'Attester',exact:true})).toHaveCount(0);
+ await expect(page.getByRole('form',{name:'Attester une émission réelle',exact:true})).toHaveCount(0);
+ await page.getByRole('navigation').getByRole('link',{name:'Comptes',exact:true}).click();
+ await expect(page.getByRole('cell',{name:'officeui',exact:true}).first()).toBeVisible();
+ await page.getByRole('navigation').getByRole('link',{name:'Offres & réservations',exact:true}).click();
+ const form=page.getByRole('form',{name:'Préparer une réservation'});
+ for (const [label,value] of Object.entries({'Compte propriétaire (UUID)':fixture.uiOwnerId,'Marque':'UI isolated brand','Code':'mIxEd-ui20','Article':'Article UI isolé','Description de l’article':'Description UI initiale','Image de l’article (URL)':fixture.imageUrl,'Catégorie':'Test','Destination':'https://example.com/ui','Accord reçu le (UTC)':fixture.agreementTime,'Référence de l’accord':'synthetic-ui-agreement','Version des documents':'0.1-test'})) {
+  await form.getByLabel(label,{exact:true}).fill(value);
+ }
+ await form.getByRole('button',{name:'Préparer une réservation',exact:true}).click();
+ const dialog=page.getByRole('dialog'); await expect(dialog).toBeVisible();
+ await expect(dialog.getByText('mIxEd-ui20',{exact:true})).toBeVisible();
+ await dialog.getByLabel('Je confirme cette opération').check();
+ await dialog.getByRole('button',{name:'Confirmer',exact:true}).click();
+ await expect(form.getByRole('status')).toContainText('Réservation préparée en brouillon');
+ await expect(page.getByRole('cell',{name:'mIxEd-ui20',exact:true})).toBeVisible();
+ await expect(page.getByRole('cell',{name:'Brouillon',exact:true})).toBeVisible();
+ const row=page.getByRole('row').filter({has:page.getByRole('cell',{name:'mIxEd-ui20',exact:true})});
+ await expect(row).toContainText('Description UI initiale');
+ await expect(row).toContainText(fixture.imageUrl);
+ await row.getByRole('link',{name:'Modifier le contenu',exact:true}).click();
+ const editor=page.getByRole('form',{name:'Modifier le contenu de l’offre'});
+ await expect(editor.getByRole('textbox',{name:'Description de l’article',exact:true})).toHaveValue('Description UI initiale');
+ await expect(editor.getByLabel('Image de l’article (URL)',{exact:true})).toHaveValue(fixture.imageUrl);
+ const preview=page.getByRole('region',{name:'Contenu de l’offre'}).getByRole('img',{name:'Aperçu de l’article'});
+ await preview.scrollIntoViewIfNeeded();
+ await expect(preview).toBeVisible();
+ await expect.poll(()=>preview.evaluate(img=>img.complete && img.naturalWidth>0)).toBeTruthy();
+ await editor.getByRole('textbox',{name:'Description de l’article',exact:true}).fill('Description UI modifiée puis relue');
+ await editor.getByLabel('Image de l’article (URL)',{exact:true}).fill(fixture.imageUrl+'?ui=edited');
+ await editor.getByRole('button',{name:'Enregistrer le contenu',exact:true}).click();
+ await page.getByRole('dialog').getByLabel('Je confirme cette opération').check();
+ await page.getByRole('dialog').getByRole('button',{name:'Confirmer',exact:true}).click();
+ await expect(editor.getByRole('status')).toContainText('Contenu enregistré et relu');
+ await expect(row).toContainText('Description UI modifiée puis relue');
+ await expect(row).toContainText(fixture.imageUrl+'?ui=edited');
+ await page.reload();
+ await expect(page.getByRole('form',{name:'Modifier le contenu de l’offre'}).getByRole('textbox',{name:'Description de l’article',exact:true})).toHaveValue('Description UI modifiée puis relue');
+ // Same account/brand cannot reserve a second offer. Server conflict, not fake success.
+ for (const [name,value] of Object.entries({ownerId:fixture.uiOwnerId,store:'UI isolated brand',code:'mIxEd-ui20',articleName:'Article UI isolé',category:'Test',destinationUrl:'https://example.com/ui',agreementReceivedAt:fixture.agreementTime,agreementReference:'synthetic-ui-agreement',documentVersion:'0.1-test'})) await form.locator(`[name="${name}"]`).fill(value);
+ await form.getByRole('button',{name:'Préparer une réservation',exact:true}).click();
+ await page.getByRole('dialog').getByLabel('Je confirme cette opération').check();
+ await page.getByRole('dialog').getByRole('button',{name:'Confirmer',exact:true}).click();
+ await expect(form.getByRole('alert')).toBeVisible(); await expect(form.getByRole('status')).toHaveCount(0);
+ await page.screenshot({path:process.env.OFFICE_INTEGRATION_SCREENSHOT,fullPage:true});
+ await page.getByRole('button',{name:'Se déconnecter',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'Connexion opérateur'})).toBeVisible();
+ await expect(page.getByRole('cell',{name:'mIxEd-ui20',exact:true})).toHaveCount(0);
+ expect(errors).toEqual([]);
+});

@@ -1,0 +1,85 @@
+Résumés extraits des sorties réelles, avant implémentation des tranches.
+
+Phase reservations
+   × réserve seulement après accord et réponse serveur, sans publication, puis restitue le conflit 1041ms
+   × recherche et pagine les comptes sur le serveur sans afficher les anciennes réponses 1014ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/reservations.test.jsx > réserve seulement après accord et réponse serveur, sans publication, puis restitue le conflit
+ FAIL  tests/reservations.test.jsx > recherche et pagine les comptes sur le serveur sans afficher les anciennes réponses
+ Test Files  1 failed | 2 passed (3)
+      Tests  2 failed | 4 passed (6)
+
+Phase waitlist
+   × consulte l’attente et enregistre une réponse favorable sans attribuer une réservation 1094ms
+   × relie les alias de marque seulement après confirmation et expose un refus de fusion 1035ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/waitlist.test.jsx > consulte l’attente et enregistre une réponse favorable sans attribuer une réservation
+ FAIL  tests/waitlist.test.jsx > relie les alias de marque seulement après confirmation et expose un refus de fusion
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+
+Phase moderation
+   × Masquer temporairement exige une confirmation des conséquences avant la mutation 221ms
+   × Lever le masquage exige une confirmation des conséquences avant la mutation 45ms
+   × Bannir le compte exige une confirmation des conséquences avant la mutation 35ms
+   × Lever le bannissement exige une confirmation des conséquences avant la mutation 27ms
+   × Résoudre le signalement exige une confirmation des conséquences avant la mutation 33ms
+   × Retirer pour fraude établie exige une confirmation des conséquences avant la mutation 42ms
+   × Créer un nouveau profil exige une confirmation des conséquences avant la mutation 26ms
+   × un signalement en erreur upstream n’affiche ni retrait ni succès ni message technique externe 28ms
+   × consulte le dossier de modération depuis un identifiant de compte exact 1013ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/moderation.test.jsx > Masquer temporairement exige une confirmation des conséquences avant la mutation
+ FAIL  tests/moderation.test.jsx > Lever le masquage exige une confirmation des conséquences avant la mutation
+ FAIL  tests/moderation.test.jsx > Bannir le compte exige une confirmation des conséquences avant la mutation
+ FAIL  tests/moderation.test.jsx > Lever le bannissement exige une confirmation des conséquences avant la mutation
+ FAIL  tests/moderation.test.jsx > Résoudre le signalement exige une confirmation des conséquences avant la mutation
+ FAIL  tests/moderation.test.jsx > Retirer pour fraude établie exige une confirmation des conséquences avant la mutation
+ FAIL  tests/moderation.test.jsx > Créer un nouveau profil exige une confirmation des conséquences avant la mutation
+ FAIL  tests/moderation.test.jsx > un signalement en erreur upstream n’affiche ni retrait ni succès ni message technique externe
+ FAIL  tests/moderation.test.jsx > consulte le dossier de modération depuis un identifiant de compte exact
+ Test Files  1 failed (1)
+      Tests  9 failed (9)
+
+Phase notifications
+   × distingue pending d’une émission attestée et exige date, référence et émission réelle 1068ms
+   × ne lance les jobs à effets destructifs qu’après confirmation explicite 105ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/notifications.test.jsx > distingue pending d’une émission attestée et exige date, référence et émission réelle
+ FAIL  tests/notifications.test.jsx > ne lance les jobs à effets destructifs qu’après confirmation explicite
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+
+Phase stats
+   × affiche uniquement les visites profil et sorties promotionnelles quotidiennes pour une période ISO 1059ms
+   × refuse une période inversée avant HTTP et efface un résultat ancien si la nouvelle lecture échoue 1012ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/stats.test.jsx > affiche uniquement les visites profil et sorties promotionnelles quotidiennes pour une période ISO
+ FAIL  tests/stats.test.jsx > refuse une période inversée avant HTTP et efface un résultat ancien si la nouvelle lecture échoue
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+
+Phase dashboard
+   × présente un tableau opérationnel alimenté par les procédures et l’outbox, sans KPI extrapolé 1059ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/dashboard.test.jsx > présente un tableau opérationnel alimenté par les procédures et l’outbox, sans KPI extrapolé
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+
+Phase safety
+   × le lien d’évitement donne le focus au contenu sans casser la navigation 286ms
+   × la confirmation montre le compte exact et les valeurs qui seront transmises 327ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/safety.test.jsx > le lien d’évitement donne le focus au contenu sans casser la navigation
+ FAIL  tests/safety.test.jsx > la confirmation montre le compte exact et les valeurs qui seront transmises
+ Test Files  1 failed (1)
+      Tests  2 failed | 4 passed (6)
+
+Phase limitations
+   × préserve les champs incidents absents sans inventer un type ou une date d’ouverture 1077ms
+   × une émission au résultat incertain n’est jamais présentée comme envoyée 1017ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/limitations.test.jsx > préserve les champs incidents absents sans inventer un type ou une date d’ouverture
+ FAIL  tests/limitations.test.jsx > une émission au résultat incertain n’est jamais présentée comme envoyée
+ Test Files  1 failed (1)
+      Tests  2 failed (2)

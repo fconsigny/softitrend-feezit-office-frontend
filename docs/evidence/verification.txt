@@ -1,0 +1,66 @@
+Verification locale UTC : 2026-10-10T09:21:40.582663+00:00
+Fixtures HTTP uniquement dans les tests ; pas une integration backend reel.
+
+$ /home/stellabot/.local/bin/bun install --frozen-lockfile
+bun install v1.4.2 (744846f84)
+
+Checked 193 installs across 217 packages (no changes) [10.00ms]
+
+exit_code=0
+
+$ /home/stellabot/.local/bin/bun --bun run test
+$ bun --bun vitest run
+
+ RUN  v5.0.3 /home/stellabot/Projects/codebase/github/feezit/softitrend-feezit-office-frontend
+
+
+ Test Files  10 passed (10)
+      Tests  32 passed (32)
+   Start at  09:21:41
+   Duration  23.31s (tests 57%, environment 27%, setup 12%, transform 2%, import 2%)
+
+    Isolate  10 workers spawned · ~702ms startup each (spawn + environment, per file)
+             at least ~6.32s faster with isolate: false — reuses workers across files instead of one per file
+
+
+exit_code=0
+
+$ /home/stellabot/.local/bin/bun --bun run test:browser
+$ bun --bun playwright test
+[WebServer] $ bun --bun vite
+
+Running 2 tests using 1 worker
+
+  ✓  1 tests/browser/office.spec.js:81:2 › navigation complète et formulaires accessibles · desktop (1.8s)
+  ✓  2 tests/browser/office.spec.js:81:2 › navigation complète et formulaires accessibles · mobile (1.5s)
+
+  2 passed (4.8s)
+
+exit_code=0
+
+$ /home/stellabot/.local/bin/bun --bun run lint
+$ bun --bun eslint .
+
+exit_code=0
+
+$ /home/stellabot/.local/bin/bun --bun run build
+$ bun --bun vite build
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 22 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.45 kB │ gzip:  0.29 kB
+dist/assets/index-Du5Sjvp7.css    7.37 kB │ gzip:  2.31 kB
+dist/assets/index-Cnmop7rm.js   215.62 kB │ gzip: 68.39 kB
+
+✓ built in 251ms
+
+exit_code=0
+
+$ /home/stellabot/.local/bin/bun audit
+bun audit v1.4.2 (744846f84)
+
+No vulnerabilities found (checked 211 packages) [225.00ms]
+
+exit_code=0

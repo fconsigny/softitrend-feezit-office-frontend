@@ -1,0 +1,76 @@
+{
+  "scope": "softitrend-feezit-office-frontend only",
+  "verification": "real React components and Office client; only HTTP boundary intercepted; not real backend integration",
+  "tests": {
+    "vitest": 52,
+    "testFiles": 11,
+    "promoContentScenarios": 19,
+    "playwrightChromium": 3
+  },
+  "gates": {
+    "lint": "passed",
+    "build": "passed"
+  },
+  "tddObservedRed": {
+    "creation": {
+      "failed": 1,
+      "passed": 1,
+      "reason": "description field missing"
+    },
+    "editor": {
+      "failed": 1,
+      "passed": 0,
+      "reason": "content editor form missing"
+    },
+    "preview": {
+      "failed": 1,
+      "passed": 2,
+      "reason": "image preview missing"
+    },
+    "validation": {
+      "failed": 1,
+      "passed": 3,
+      "reason": "javascript image URL wrongly valid"
+    },
+    "creationPreview": {
+      "failed": 1,
+      "passed": 10,
+      "reason": "reservation preview missing"
+    },
+    "boundedBrowserPreview": {
+      "failed": 1,
+      "passed": 0,
+      "reason": "image height 1200 instead of <=240"
+    },
+    "longUrlVisibility": {
+      "failed": 1,
+      "passed": 0,
+      "reason": "URL paragraph scrollWidth exceeded clientWidth; visual inspection exposed clipping despite no document overflow"
+    }
+  },
+  "imageSecurity": {
+    "protocols": [
+      "http:",
+      "https:"
+    ],
+    "rejectCredentials": true,
+    "referrerPolicy": "no-referrer",
+    "maxWidthPx": 320,
+    "maxHeightPx": 240,
+    "unsafeUrlCases": 6,
+    "imageFailurePreservesUrl": true
+  },
+  "contract": {
+    "create": "POST /office-api/management/reservations adds optional articleDescription/articleImage",
+    "read": "GET /office-api/management/promos/{UUID}",
+    "edit": "PUT /office-api/management/promos/{UUID}/content; exact two string keys; empty clears",
+    "successRequiresDetailReread": true
+  },
+  "limits": [
+    "Nginx has no CSP; parent adjusts local Apache img-src separately",
+    "Synthetic Chromium HTTP fixtures do not prove real backend integration",
+    "No production requests, deployment, commit or push"
+  ],
+  "screenshot": "docs/evidence/promo-content-mobile-synthetic.png",
+  "preservation": "Existing source files retained; existing browser evidence screenshots restored after full suite"
+}

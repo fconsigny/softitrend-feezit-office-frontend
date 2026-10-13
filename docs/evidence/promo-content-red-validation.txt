@@ -1,0 +1,36 @@
+$ bun --bun vitest run tests/promo-content.test.jsx
+
+ RUN  v5.0.3 /home/stellabot/Projects/codebase/github/feezit/softitrend-feezit-office-frontend
+
+ ❯ tests/promo-content.test.jsx (4 tests | 1 failed) 1236ms
+   × refuse une image non HTTP(S) à la création sans envoyer de réservation 480ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/promo-content.test.jsx > refuse une image non HTTP(S) à la création sans envoyer de réservation
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/promo-content.test.jsx:36:32
+     34|   const image = form.getByLabelText("Image de l’article (URL)");
+     35|   await userEvent.type(image, "javascript:alert(1)");
+     36|   expect(image.validity.valid).toBe(false);
+       |                                ^
+     37|   expect(image).toHaveAttribute("pattern", "https?://.+");
+     38|   expect(form.getByLabelText("Description de l’article")).toHaveAttrib…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  20:44:47
+   Duration  2.73s (tests 48%, environment 22%, transform 15%, setup 11%, import 3%)
+
+error: "vitest" exited with code 1
+error: script "test" exited with code 1

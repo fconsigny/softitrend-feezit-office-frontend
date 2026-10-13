@@ -1,0 +1,35 @@
+{
+  "name": "feezit-office-frontend",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --bun vite",
+    "build": "bun --bun vite build",
+    "preview": "bun --bun vite preview",
+    "test": "bun --bun vitest run",
+    "test:watch": "bun --bun vitest",
+    "lint": "bun --bun eslint .",
+    "test:browser": "bun --bun playwright test",
+    "format": "bun --bun prettier --write src tests *.js *.json index.html Readme.md"
+  },
+  "dependencies": {
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.36.0",
+    "@playwright/test": "1.64.0",
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/react": "16.3.0",
+    "@testing-library/user-event": "14.6.1",
+    "@vitejs/plugin-react": "6.1.2",
+    "eslint": "9.36.0",
+    "eslint-plugin-react-hooks": "5.2.0",
+    "globals": "16.4.0",
+    "jsdom": "26.1.0",
+    "prettier": "3.6.2",
+    "vite": "8.3.4",
+    "vitest": "5.0.3"
+  }
+}

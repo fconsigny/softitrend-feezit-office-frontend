@@ -1,0 +1,30 @@
+$ bun --bun playwright test tests/browser/promo-content.spec.js
+[WebServer] $ bun --bun vite
+
+Running 1 test using 1 worker
+
+  ✘  1 tests/browser/promo-content.spec.js:4:0 › contenu éditable, aperçu externe borné sans référent et URL conservée après échec (1.1s)
+
+
+  1) tests/browser/promo-content.spec.js:4:0 › contenu éditable, aperçu externe borné sans référent et URL conservée après échec 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      89 |   ).toBeVisible();
+      90 |   await expect(editor.getByText(badImage, { exact: true })).toBeVisible();
+    > 91 |   expect(await editor.getByText(badImage, { exact: true }).evaluate((node) => node.scrollWidth <= node.clientWidth)).toBe(true);
+         |                                                                                                                     ^
+      92 |   expect(
+      93 |     await page.evaluate(
+      94 |       () => document.documentElement.scrollWidth <= innerWidth,
+        at /home/stellabot/Projects/codebase/github/feezit/softitrend-feezit-office-frontend/tests/browser/promo-content.spec.js:91:117
+
+    Error Context: test-results/promo-content-contenu-édit-ab978-t-URL-conservée-après-échec/error-context.md
+
+  1 failed
+    tests/browser/promo-content.spec.js:4:0 › contenu éditable, aperçu externe borné sans référent et URL conservée après échec 
+error: "playwright" exited with code 1
+error: script "test:browser" exited with code 1

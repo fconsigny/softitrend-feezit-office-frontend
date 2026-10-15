@@ -25,14 +25,19 @@ const translations = {
   uncertain: "Résultat incertain",
   delivered: "Livraison confirmée",
 };
-export function displayValue(value, { literal = false } = {}) {
+export function displayValue(value, { format = "text" } = {}) {
   if (value === null || value === undefined || value === "") return "—";
-  if (literal) return String(value);
-  if (typeof value === "boolean") return value ? "Oui" : "Non";
-  if (Object.hasOwn(translations, value)) return translations[value];
+  if (format === "boolean" && typeof value === "boolean")
+    return value ? "Oui" : "Non";
+  if (format === "status" && Object.hasOwn(translations, value))
+    return translations[value];
   if (typeof value === "object")
     return Array.isArray(value) ? value.join(", ") : "Donnée structurée";
-  if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}(T|$)/.test(value)) {
+  if (
+    format === "date" &&
+    typeof value === "string" &&
+    /^\d{4}-\d{2}-\d{2}(T|$)/.test(value)
+  ) {
     const date = new Date(value);
     if (!Number.isNaN(date.getTime()))
       return (
@@ -69,7 +74,7 @@ export function Table({ items, columns, action }) {
         <tbody>
           {items.map((item, index) => (
             <tr key={valueOf(item, "id") ?? valueOf(item, "promoId") ?? index}>
-              {columns.map(([key]) => (
+              {columns.map(([key, , format]) => (
                 <td
                   key={key}
                   className={
@@ -78,20 +83,9 @@ export function Table({ items, columns, action }) {
                       : ""
                   }
                 >
-                  <span
-                    className={
-                      [
-                        "visibility",
-                        "publicationStatus",
-                        "deliveryStatus",
-                        "status",
-                      ].includes(key)
-                        ? "badge"
-                        : ""
-                    }
-                  >
+                  <span className={format === "status" ? "badge" : ""}>
                     {displayValue(valueOf(item, key), {
-                      literal: ["articleDescription", "articleImage"].includes(key),
+                      format,
                     })}
                   </span>
                 </td>
@@ -113,10 +107,12 @@ export function ResourceList({
   serverPage = false,
   searchable = true,
   action,
+  scope,
 }) {
   const [page, setPage] = useState(0);
   const [query, setQuery] = useState("");
   const [draft, setDraft] = useState("");
+  const [validation, setValidation] = useState("");
   const id = useId();
   const size = 20;
   const endpoint = serverPage
@@ -145,13 +141,23 @@ export function ResourceList({
     <section className="panel" aria-label={title}>
       <div className="panel-heading">
         <h2>{title}</h2>
-        <span className="badge">Lecture serveur</span>
+        <span className="badge">
+          {serverPage ? "Pagination serveur" : "Pagination locale"}
+        </span>
       </div>
+      {scope && <p className="notice list-scope">{scope}</p>}
       {searchable && (
         <form
           className="search"
           onSubmit={(event) => {
             event.preventDefault();
+            if (draft.length > 200) {
+              setValidation(
+                "Recherche : 200 caractères maximum. Saisie conservée, non tronquée.",
+              );
+              return;
+            }
+            setValidation("");
             setPage(0);
             setQuery(draft);
           }}
@@ -159,11 +165,14 @@ export function ResourceList({
           <label htmlFor={id}>Rechercher</label>
           <input
             id={id}
+            maxLength={200}
+            title="200 caractères maximum"
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
             placeholder="Nom, marque ou identifiant…"
           />
           <button>Rechercher</button>
+          {validation && <p role="alert">{validation}</p>}
         </form>
       )}
       {resource.loading ? (
@@ -179,7 +188,9 @@ export function ResourceList({
           <Table items={items} columns={columns} action={action} />
           <div className="pagination">
             <span>
-              {total} résultat{total === 1 ? "" : "s"} · page {page + 1}
+              {total} résultat{total === 1 ? "" : "s"}
+              {scope && !serverPage ? " dans ce périmètre" : ""} · page{" "}
+              {page + 1}
             </span>
             <div>
               <button
@@ -191,7 +202,9 @@ export function ResourceList({
               </button>
               <button
                 aria-label="Page suivante"
-                disabled={(page + 1) * size >= total}
+                disabled={
+                  (page + 1) * size >= total || (serverPage && page >= 10000)
+                }
                 onClick={() => setPage(page + 1)}
               >
                 Suivante →
@@ -294,6 +307,7 @@ export function CommandForm({
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [articleImage, setArticleImage] = useState(initial.articleImage || "");
+  const formId = useId();
   const formRef = useRef();
   const controller = useRef();
   useEffect(() => () => controller.current?.abort(), []);
@@ -335,6 +349,17 @@ export function CommandForm({
     const values = Object.fromEntries(new FormData(event.currentTarget));
     setError("");
     setSuccess("");
+    const oversized = command.fields.find(
+      (field) =>
+        field.maxLength &&
+        String(values[field.key] ?? "").length > field.maxLength,
+    );
+    if (oversized) {
+      setError(
+        `${oversized.label} : ${oversized.maxLength} caractères maximum. Saisie conservée, non tronquée.`,
+      );
+      return;
+    }
     if (command.consequence) setPending(values);
     else execute(values);
   }
@@ -354,6 +379,8 @@ export function CommandForm({
                 {field.type === "textarea" ? (
                   <textarea
                     name={field.key}
+                    aria-label={field.label}
+                    aria-describedby={`${formId}-${field.key}-limit`}
                     required={field.required !== false}
                     maxLength={field.maxLength || 2000}
                     defaultValue={initial[field.key] || ""}
@@ -361,6 +388,12 @@ export function CommandForm({
                 ) : (
                   <input
                     name={field.key}
+                    aria-label={field.label}
+                    aria-describedby={
+                      field.maxLength
+                        ? `${formId}-${field.key}-limit`
+                        : undefined
+                    }
                     type={field.type === "uuid" ? "text" : field.type || "text"}
                     required={field.required !== false}
                     pattern={
@@ -382,6 +415,11 @@ export function CommandForm({
                         : undefined
                     }
                   />
+                )}
+                {field.maxLength && (
+                  <small id={`${formId}-${field.key}-limit`} className="muted">
+                    {field.maxLength} caractères maximum
+                  </small>
                 )}
               </label>
             ))}

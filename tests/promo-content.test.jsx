@@ -95,8 +95,8 @@ it("réserve avec les champs facultatifs vides et conserve le statut brouillon",
 it.each([
   [2001, "Préparer une réservation"],
   [2048, "Préparer une réservation"],
-  [2001, "Modifier le contenu de l’offre"],
-  [2048, "Modifier le contenu de l’offre"],
+  [2001, "Modifier la bannière de l’offre"],
+  [2048, "Modifier la bannière de l’offre"],
 ])(
   "autorise une URL image HTTP(S) de %i caractères : %s",
   async (length, name) => {
@@ -114,10 +114,11 @@ it.each([
       expect(input).toHaveValue(url);
       expect(input).toHaveAttribute("maxlength", "2048");
       expect(input.checkValidity()).toBe(true);
-      expect(form.getByLabelText("Description de l’article")).toHaveAttribute(
-        "maxlength",
-        "2000",
-      );
+      expect(
+        screen
+          .getByRole("form", { name: "Modifier le contenu de l’offre" })
+          .querySelector("textarea"),
+      ).toHaveAttribute("maxlength", "2000");
     }
   },
 );
@@ -138,7 +139,9 @@ it("annule la confirmation sans mutation et garde le brouillon", async () => {
       name: "Annuler",
     }),
   );
-  expect(http.mock.calls.some(([url]) => url.endsWith("/content"))).toBe(false);
+  expect(http.mock.calls.some(([url]) => url.endsWith("/description"))).toBe(
+    false,
+  );
   expect(form.getByLabelText("Description de l’article")).toHaveValue(
     "À conserver",
   );
@@ -173,13 +176,20 @@ it("réinitialise le brouillon à la sélection d’une autre offre", async () =
   const next = within(
     screen.getByRole("form", { name: "Modifier le contenu de l’offre" }),
   );
-  expect(next.getByLabelText("Image de l’article (URL)")).toHaveValue("");
+  expect(next.getByLabelText("Description de l’article")).toHaveValue(
+    "Autre offre",
+  );
+  expect(
+    within(
+      screen.getByRole("form", { name: "Modifier la bannière de l’offre" }),
+    ).getByLabelText("Image de l’article (URL)"),
+  ).toHaveValue("");
 });
 
-it("efface les deux champs avec des chaînes explicites sans toucher au code ni au masquage", async () => {
+it("efface la description seule sans toucher à la bannière ni au code ni au masquage", async () => {
   let saved;
   setup((url, options) => {
-    if (url.endsWith("/content")) {
+    if (url.endsWith("/description")) {
       saved = JSON.parse(options.body);
       return response(200, { ...original, ...saved });
     }
@@ -188,18 +198,21 @@ it("efface les deux champs avec des chaînes explicites sans toucher au code ni 
   });
   const form = await editor();
   await userEvent.clear(form.getByLabelText("Description de l’article"));
-  await userEvent.clear(form.getByLabelText("Image de l’article (URL)"));
   await confirm(form);
   expect(await form.findByText(/Contenu enregistré/)).toBeInTheDocument();
-  expect(saved).toEqual({ articleDescription: "", articleImage: "" });
+  expect(saved).toEqual({ articleDescription: "" });
   expect(form.getByLabelText("Description de l’article")).toHaveValue("");
-  expect(form.getByLabelText("Image de l’article (URL)")).toHaveValue("");
-  expect(screen.queryByRole("img")).not.toBeInTheDocument();
+  expect(
+    within(
+      screen.getByRole("form", { name: "Modifier la bannière de l’offre" }),
+    ).getByLabelText("Image de l’article (URL)"),
+  ).toHaveValue(original.articleImage);
+  expect(screen.getByRole("img")).toHaveAttribute("src", original.articleImage);
   expect(screen.getByText(/MiXeD · Masqué/)).toBeInTheDocument();
 });
 it("conserve le brouillon après refus serveur et ne simule aucune mutation", async () => {
   const http = setup((url) =>
-    url.endsWith("/content") ? response(400, {}) : undefined,
+    url.endsWith("/description") ? response(400, {}) : undefined,
   );
   const form = await editor();
   await userEvent.clear(form.getByLabelText("Description de l’article"));
@@ -221,7 +234,7 @@ it("conserve le brouillon après refus serveur et ne simule aucune mutation", as
 it("n’annonce pas de succès si la relecture après PUT échoue", async () => {
   let saved = false;
   setup((url) => {
-    if (url.endsWith("/content")) {
+    if (url.endsWith("/description")) {
       saved = true;
       return response(200, original);
     }
@@ -285,7 +298,7 @@ it("ignore une ancienne prélecture lors du changement d’offre", async () => {
 });
 it("ignore une sauvegarde tardive après déconnexion et efface les données privées", async () => {
   const late = deferred();
-  setup((url) => (url.endsWith("/content") ? late.promise : undefined));
+  setup((url) => (url.endsWith("/description") ? late.promise : undefined));
   const form = await editor();
   await confirm(form);
   await userEvent.click(screen.getByRole("button", { name: "Se déconnecter" }));
@@ -337,6 +350,9 @@ it("refuse une image non HTTP(S) à la création sans envoyer de réservation", 
 it("prévisualise uniquement HTTP(S) sans référent et garde l’URL visible après échec", async () => {
   setup();
   const form = await editor();
+  expect(
+    form.queryByLabelText("Image de l’article (URL)"),
+  ).not.toBeInTheDocument();
   const image = within(
     screen.getByRole("region", { name: "Contenu de l’offre" }),
   ).getByRole("img", { name: "Aperçu de l’article" });
@@ -347,9 +363,11 @@ it("prévisualise uniquement HTTP(S) sans référent et garde l’URL visible ap
     screen.getByText("Aperçu indisponible. L’URL reste consultable."),
   ).toBeInTheDocument();
   expect(screen.getAllByText(original.articleImage).length).toBeGreaterThan(0);
-  expect(form.getByLabelText("Image de l’article (URL)")).toHaveValue(
-    original.articleImage,
-  );
+  expect(
+    within(
+      screen.getByRole("form", { name: "Modifier la bannière de l’offre" }),
+    ).getByLabelText("Image de l’article (URL)"),
+  ).toHaveValue(original.articleImage);
 });
 it.each([
   "javascript:alert(1)",
@@ -368,7 +386,7 @@ it.each([
     );
     const form = within(
       await screen.findByRole("form", {
-        name: "Modifier le contenu de l’offre",
+        name: "Modifier la bannière de l’offre",
       }),
     );
     await waitFor(() =>
@@ -385,7 +403,7 @@ it("préremplit l’offre masquée, affiche le texte échappé et relit le conte
   let saved;
   const reread = deferred();
   const http = setup((url, options) => {
-    if (url.endsWith("/content")) {
+    if (url.endsWith("/description")) {
       saved = JSON.parse(options.body);
       return response(200, { ...original, ...saved });
     }
@@ -404,20 +422,14 @@ it("préremplit l’offre masquée, affiche le texte échappé et relit le conte
     form.getByLabelText("Description de l’article"),
     "Description revue",
   );
-  await userEvent.clear(form.getByLabelText("Image de l’article (URL)"));
-  await userEvent.type(
-    form.getByLabelText("Image de l’article (URL)"),
-    "http://images.example.test/new.png",
-  );
   await confirm(form);
   await waitFor(() =>
     expect(saved).toEqual({
       articleDescription: "Description revue",
-      articleImage: "http://images.example.test/new.png",
     }),
   );
   expect(form.queryByText(/Contenu enregistré/)).not.toBeInTheDocument();
-  const put = http.mock.calls.find(([url]) => url.endsWith("/content"))[1];
+  const put = http.mock.calls.find(([url]) => url.endsWith("/description"))[1];
   expect(put.method).toBe("PUT");
   expect(put.headers["X-CSRF-TOKEN"]).toBeTruthy();
   await act(async () =>

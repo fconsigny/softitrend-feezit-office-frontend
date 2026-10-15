@@ -1,6 +1,6 @@
 {
   "name": "feezit-office-frontend",
-  "version": "0.2.0",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,7 +10,6 @@
     "test": "bun --bun vitest run",
     "test:watch": "bun --bun vitest",
     "lint": "bun --bun eslint .",
-    "test:browser": "bun --bun playwright test",
     "format": "bun --bun prettier --write src tests *.js *.json index.html Readme.md"
   },
   "dependencies": {

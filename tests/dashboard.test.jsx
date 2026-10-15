@@ -21,25 +21,30 @@ it("présente un tableau opérationnel alimenté par les procédures et l’outb
         page: 0,
         size: 20,
       });
-    if (url.endsWith("/outbox"))
-      return response(200, [
-        {
-          ID: promo,
-          KIND: "report_received",
-          DELIVERY_STATUS: "pending",
-          SENT_AT: null,
-        },
-      ]);
+    if (url.includes("/outbox-page?"))
+      return response(200, {
+        items: [
+          {
+            id: promo,
+            kind: "report_received",
+            deliveryStatus: "pending",
+            sentAt: null,
+          },
+        ],
+        total: 1,
+        page: 0,
+        size: 20,
+      });
   });
   render(<App client={createOfficeClient(http)} />);
   expect(
-    await screen.findByRole("link", { name: "Préparer un accord" }),
+    await screen.findByRole("link", { name: "Préparer une offre" }),
   ).toBeInTheDocument();
   expect(await screen.findByText("En attente d’émission")).toBeInTheDocument();
   expect(screen.getByText("report")).toBeInTheDocument();
   expect(screen.getByText(/aucun KPI global extrapolé/i)).toBeInTheDocument();
   await userEvent.click(
-    screen.getByRole("link", { name: "Préparer un accord" }),
+    screen.getByRole("link", { name: "Préparer une offre" }),
   );
   expect(
     await screen.findByRole("form", { name: "Préparer une réservation" }),

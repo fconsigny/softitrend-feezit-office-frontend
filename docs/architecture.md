@@ -8,6 +8,25 @@
 4. **`src/components.jsx`** : tableaux métier avec clés camelCase/SQL MAJUSCULES, recherche/pagination, formulaires de commandes, confirmations qui montrent valeurs et conséquences. Pas d’éditeur JSON brut. Révision de lectures après succès, sans mutation optimiste. Les contrôles HTML complètent les validations serveur.
 5. **`src/commands.js`, `src/pages.jsx`, `src/Stats.jsx`** : catalogue explicite méthode/chemin/champs/effets. Le métier reste dans Feezit ; ni règle de classement, ni attribution, ni échéance reconstruite depuis une donnée absente.
 
+## Évolution JR-04 — candidat 0.3.0
+
+- `Table` rend le texte littéralement par défaut. Le troisième élément d’une colonne désigne explicitement `status`, `date` ou `boolean` ; aucun format n’est inféré depuis le texte d’un code ou d’une référence. Le dictionnaire des statuts ne lit que ses propriétés propres.
+- La navigation accepte seulement les paramètres UUID uniques `ownerId`/`promoId` conformes, sans trim ni réparation. Les huit routes restent privées. Recherche de compte par le répertoire management ; pas d’annuaire public ni filtre propriétaire fictif pour les offres.
+- `usePromoEditor` centralise le cycle PUT → GET de vérification, sans centraliser les brouillons : chaque formulaire a son état indépendant, version d’édition, annulation et résultat partiel. Une lecture commencée avant la mutation est annulée ; une lecture de révision pendant la mutation ne peut écraser son résultat. Un PUT accepté suivi d’un GET échoué bloque sa répétition et propose exclusivement GET via Relire. Une nouvelle saisie n’est pas remplacée par la réponse de vérification.
+- `PromoDetails` sépare le DTO Promo et la projection management de participation. Aucune date d’accord déduite ; l’erreur de participation ne bloque pas les champs de contenu. Destination et contenu ont des confirmations/payloads distincts, les invariants restant propriétaires de Feezit.
+- Les totaux dashboard utilisent `Page.total`, jamais `items.length`. Outbox utilise `outbox-page`, pagination serveur sans paramètre q. Le moniteur email reste un tableau limité100, clairement indiqué. `operations-status` montre la configuration, pas le succès d’un fournisseur/job.
+- `scripts/jury-browser.py` lance Vite sur port loopback éphémère et arrête navigateur/processus en `finally`. `playwright.jury.config.js` sélectionne uniquement les tests HTTP interceptés ; la recette vrais serveurs ne peut pas être importée implicitement. `jury-final.py` compare les SHA des sources/tests/configurations avant/après les gates et refuse tout succès si elles changent.
+
+Preuves JR-04 : `docs/evidence/jury-release/` ; rapport de sous-lot `../jury-release-20261013/implementation-office-frontend.md`. Le récapitulatif suivant décrit aussi le socle historique, pas une nouvelle validation de production.
+
+## Bannière indépendante — candidat du 15 octobre 2026
+
+`PromoContentEditor` conserve le DTO confirmé et la génération commune ; il utilise `description` avec la seule clé `articleDescription`. `PromoBannerEditor` réutilise `usePromoEditor` pour `banner`, avec sa propre saisie, confirmation, état partiel et vérification privée JSON supplémentaire. La projection image n’est appliquée qu’après relecture Promo + JSON privé réussie et génération toujours actuelle. Le PUT `content` historique n’est pas modifié dans ce frontend et n’est plus utilisé par l’éditeur.
+
+Le FileReader est une frontière asynchrone locale protégée par version ; choisir une nouvelle URL/un autre fichier ou démonter le formulaire invalide les lectures précédentes. Une nouvelle sélection après acceptation partielle survit à Relire. Aucune Data URL de saisie n’est envoyée comme URL serveur : uniquement les octets Base64 et le MIME PNG/JPEG. Les Data URL autorisées au rendu proviennent du fichier local contrôlé ou du JSON authentifié ; une URL utilisateur `data:` reste refusée. Les aperçus d’import ne sollicitent jamais la route publique éventuellement masquée. Le parent doit vérifier `img-src data:` sur la CSP réellement livrée.
+
+Les tests historiques sont conservés et adaptés aux routes/formulaires désormais séparés, sans retrait des scénarios de fraîcheur/erreur/session. Les nouvelles preuves TDD et gates se trouvent dans `../continuous-banner-20261015/feature/office-frontend/` ; elles ne prouvent ni intégration réelle des backends, ni production.
+
 ## Traçabilité des décisions
 
 | ID | Source actuelle | Couverture frontend | Preuves |
@@ -29,4 +48,4 @@ Tranches observées rouge → vert : accès refusé ; session/navigation et nett
 
 Les tests fonctionnels rendent les vrais composants et manipulent les vrais formulaires via Testing Library, sans mock des hooks, du routage ou du catalogue de commandes. Les doubles restent à la frontière HTTP. Les tests Chromium utilisent une interception HTTP limitée à `tests/browser/`, avec données synthétiques déclarées et captures régénérées. Lint/build/audit sont des gates techniques séparées, pas des tests métier.
 
-Limites : pas de transport email ni identifiants réels utilisés, pas de mutation réelle de backend par cette sous-tâche, pas de certification sécurité/accessibilité, intégration backend isolée à mener par l’orchestrateur propriétaire de cette stack. Le contrat de lecture incidents ne donne actuellement aucun type ou ouverture propre dans le schéma existant ; `null` reste `—`.
+Limites JR-04 : aucun transport email ni identifiant réel utilisé, pas de mutation réelle de backend par cette sous-tâche, pas de certification sécurité/accessibilité. L’intégration de ce candidat avec les vrais backends isolés reste à mener par le parent ; les intégrations 0.1/0.2 documentées dans le README sont des preuves historiques distinctes. Le contrat de lecture incidents ne donne actuellement aucun type ou ouverture propre dans le schéma existant ; `null` reste `—`.

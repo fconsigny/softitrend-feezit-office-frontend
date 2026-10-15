@@ -1,7 +1,36 @@
+const limits = {
+  ownerId: 36,
+  promoId: 36,
+
+  username: 30,
+  store: 100,
+  alias: 100,
+  canonicalStore: 100,
+  creatorName: 100,
+  code: 80,
+  articleName: 150,
+  category: 80,
+  documentVersion: 100,
+  name: 100,
+  bio: 1000,
+  facts: 4000,
+  exchanges: 4000,
+  reason: 2000,
+  dossierReference: 300,
+  agreementReference: 300,
+  emailReference: 300,
+
+  reporterEmail: 254,
+};
 const field = (key, label, type = "text", options = {}) => ({
   key,
   label,
   type,
+  maxLength: Object.hasOwn(limits, key)
+    ? limits[key]
+    : type === "url"
+      ? 2048
+      : undefined,
   ...options,
 });
 export const ownerField = field(
@@ -22,24 +51,6 @@ const accountPath = (suffix) => (values) =>
 const promoPath = (suffix) => (values) =>
   `promos/${encodeURIComponent(values.promoId)}/${suffix}`;
 export const commands = {
-  sent: {
-    title: "Attester une émission réelle",
-    method: "PUT",
-    path: (values) =>
-      `outbox/${encodeURIComponent(values.notificationId)}/sent`,
-    pathFields: ["notificationId"],
-    description:
-      "Seulement après émission réelle confirmée. Cette attestation ne vérifie ni le fournisseur ni la réception par le destinataire.",
-    consequence:
-      "Je confirme une émission réelle par un canal externe à la date et référence indiquées. Cette attestation démarre potentiellement les échéances J0 et d’inactivité, dont des retraits futurs. Une mise en attente n’est pas une émission.",
-    success:
-      "Attestation acceptée par le serveur. Pas de preuve de réception déduite.",
-    fields: [
-      field("notificationId", "Notification (UUID)", "uuid"),
-      field("sentAt", "Émission le (UTC)", "datetime-local"),
-      field("deliveryReference", "Référence de livraison"),
-    ],
-  },
   jobs: {
     title: "Exécuter les échéances",
     danger: true,

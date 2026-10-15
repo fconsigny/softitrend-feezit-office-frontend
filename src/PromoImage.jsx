@@ -28,6 +28,13 @@ function ImagePreview({ url }) {
     />
   );
 }
-export function PromoImage({ url }) {
-  return safeImageUrl(url) ? <ImagePreview key={url} url={url} /> : null;
+export function PromoImage({ url, privateSource }) {
+  const source =
+    typeof privateSource === "string" &&
+    /^data:image\/(png|jpeg);base64,[A-Za-z0-9+/]+={0,2}$/.test(privateSource)
+      ? privateSource
+      : url;
+  return (source === privateSource || safeImageUrl(source)) && source ? (
+    <ImagePreview key={source} url={source} />
+  ) : null;
 }

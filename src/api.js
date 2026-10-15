@@ -10,6 +10,8 @@ export class OfficeError extends Error {
       403: "Action refusée. Vérifiez les droits ou renouvelez la session.",
       404: "Élément introuvable ou route indisponible.",
       409: "Conflit : cet état a changé ou cet emplacement est déjà réservé. Relisez les données.",
+      413: "Envoi trop volumineux. Une image importée ne doit pas dépasser 1 MiB.",
+      415: "Format de fichier non pris en charge. Importez une image PNG ou JPEG.",
       429: "Trop de demandes. Réessayez dans quelques instants.",
       502: "Service Feezit indisponible. Aucune réussite n’est confirmée.",
       504: "Le service Feezit n’a pas répondu à temps. Relisez l’état avant de réessayer.",

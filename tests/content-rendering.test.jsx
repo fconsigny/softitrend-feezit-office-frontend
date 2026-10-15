@@ -24,8 +24,8 @@ it.each([
         columns={[
           ["articleDescription", "Description"],
           ["articleImage", "Image"],
-          ["publicationStatus", "Statut"],
-          ["openedAt", "Date"],
+          ["publicationStatus", "Statut", "status"],
+          ["openedAt", "Date", "date"],
         ]}
       />,
     );
@@ -42,7 +42,9 @@ it.each([
 it.each(["__proto__", "constructor"])(
   "affiche le statut inconnu %s comme texte sans lookup hérité",
   (status) => {
-    render(<Table items={[{ status }]} columns={[["status", "Statut"]]} />);
+    render(
+      <Table items={[{ status }]} columns={[["status", "Statut", "status"]]} />,
+    );
     expect(screen.getByRole("cell")).toHaveTextContent(status);
   },
 );

@@ -5,3 +5,6 @@ coverage/
 *.log
 test-results/
 playwright-report/
+
+# Local historical recipe reports, not application source.
+/docs/evidence/jury-release/

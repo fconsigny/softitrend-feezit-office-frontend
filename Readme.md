@@ -32,7 +32,43 @@ Le serveur de preview hérite du proxy local. Il ne constitue pas un hébergemen
 - **Statistiques** : compte/période ISO, quotidien et totaux de période des seules visites profil et sorties promotionnelles. Source réelle, UTC, maximum 366 jours. Pas de revenus, conversions ou visiteurs uniques déduits.
 - **Notifications** : outbox `pending` distincte de `sent`, lecture des émissions attestées côté Feezit ; confirmation manuelle indisponible (garde Feezit 409), suivi `email-deliveries`, résultat incertain distinct d’un envoi. Jobs au temps serveur avec confirmation des possibles suppressions ; pas de simulation.
 
-## Contenu des offres — version 0.2.0 livrée le 12 octobre 2026
+## Candidat jury 0.3.0 — sources locales, non livré
+
+Contrat partagé : `../jury-release-20261013/release-contract.md`, JR-03/JR-04. Les huit écrans et l’identité sombre sont conservés, sans TypeScript ni nouvelle dépendance.
+
+- Dashboard : totaux **serveur** comptes/offres/procédures, tous états indiqués ; indisponible reste distinct de zéro. Procédures ouvertes et notifications paginées, jamais une somme locale présentée comme total.
+- Comptes → réservation, statistiques, dossier et attente : UUID validé, jamais « réparé ». Le dossier sélectionné est lu directement. Recherche interne de compte avant réservation. La liste des offres reste tous comptes : aucun filtre propriétaire n’existe au contrat et aucun n’est inventé.
+- Détail offre : propriétaire, marque/code exacts, destination, conditions et dates ; publication distincte de validité. Accord relu via `GET promos/{UUID}/participation` : vraie réception/référence/version/expiration serveur, pas la création de l’offre substituée à la date de l’accord.
+- Destination : formulaire et confirmation séparés ; `PUT promos/{UUID}/destination` envoie uniquement `{destinationUrl}`. Description/image conservent leur PUT deux champs. Brouillons indépendants et protégés lors des actualisations/changements de sélection/session.
+- Si PUT est accepté mais GET échoue : message partiel, saisie conservée, nouvelle mutation désactivée, bouton **Relire** qui fait uniquement GET. Une nouvelle saisie faite avant cette relecture est conservée.
+- Tables : texte littéral par défaut ; statuts/dates/booléens explicitement désignés par colonne, dictionnaire protégé par `Object.hasOwn`. Limites par champ alignées et indiquées ; refus N+1 sans réécriture JavaScript de la saisie.
+- Notifications : `GET outbox-page?page=&size=` exclusivement, forme Page camelCase ; aucun recours client à l’outbox legacy. Suivi email limité aux **100 dernières notifications**, filtrage/pagination locaux clairement indiqués. `operations-status` affiche la configuration, jamais une preuve d’envoi/réception ou un dernier passage de job. Confirmation manuelle toujours absente ; échéances à effets réels isolées et confirmées.
+
+Recette reproductible sur port loopback éphémère, services arrêtés en `finally` :
+
+```sh
+flock ../jury-release-20261013/build.lock python3 scripts/jury-final.py
+```
+
+Preuves courantes : `docs/evidence/jury-release/` et `../jury-release-20261013/implementation-office-frontend.{md,json}`. Les tests rendent les vrais composants/pages et exécutent Chromium, **HTTP intercepté avec fixtures synthétiques**. Ils ne remplacent pas la future recette parent avec vrais jars et PostgreSQL. Aucun service actif, email réel, secret, commit/push ou déploiement utilisé par ce lot. `bun.lock` ne porte pas la version racine du produit ; dépendances inchangées et installation figée vérifiée pour `package.json` 0.3.0.
+
+Nettoyage après premiers gates verts : définition UI inutilisée `commands.sent` et ses limites exclusives, styles `.bar`/`.toolbar` sans appel. Tests de non-attestation et compatibilité de lecture MAJUSCULES conservés.
+
+## Bannière par offre — candidat local du 15 octobre 2026
+
+Contrat partagé : `../continuous-banner-20261015/banner-contract.md`, incluant la précision additive « Compatibilité de l’édition de description Office ». Aucun backend ni déploiement modifié par ce sous-lot.
+
+- Un panneau **Bannière de l’offre** remplace l’ancien champ image du formulaire de contenu : URL HTTP(S) de 2048 caractères maximum, ou import PNG/JPEG non vide de **1 MiB maximum**, remplacement et effacement confirmé. La signature du fichier est contrôlée avant envoi ; décodage, dimensions et assainissement restent de la responsabilité du serveur.
+- `PUT promos/{UUID}/banner` envoie exclusivement `{url}` (vide pour effacer) ou `{contentType,base64}`. La description utilise désormais exclusivement `PUT promos/{UUID}/description` avec `{articleDescription}` ; la destination garde sa route indépendante. Le frontend n’utilise plus le PUT `content` historique à deux champs : sa compatibilité API reste à assurer côté backend pour les anciens clients. Une sauvegarde de description ne transporte donc jamais une ancienne URL d’image.
+- Les imports brouillon/masqués sont prévisualisés par `GET promos/{UUID}/banner`, JSON authentifié, puis Data URL PNG/JPEG locale. L’URL publique d’un import n’est jamais chargée par ce panneau. L’URL enregistrée reste lisible ; un hébergeur externe reste contacté directement par le navigateur avec `no-referrer`, jamais téléchargé par Office.
+- Brouillons indépendants, génération de fraîcheur partagée, annulation et protection des lectures de fichier. Après mutation acceptée et relecture Promo **ou image privée** échouée : résultat partiel explicite, nouvelle mutation bloquée, **Relire** effectue uniquement GET. Une saisie ou un nouveau fichier sélectionné depuis l’acceptation reste conservé.
+- L’aperçu recadre horizontalement sans modifier le fichier. Aucune publication, levée de modération, mesure de visite/clic, stockage navigateur persistant, secret serveur ou proxy binaire ajouté.
+
+**CSP de livraison à vérifier par le parent** : ajouter `data:` exclusivement à `img-src` du vhost Apache existant, en conservant les sources externes HTTP(S) déjà autorisées. Ne pas élargir `script-src`, `connect-src` ou les autres directives ; aucun besoin de `blob:`. Le présent dépôt Nginx ne définit pas la CSP active de production. Une capture sous fixture ne prouve pas cet en-tête.
+
+Gates et journaux du candidat : `../continuous-banner-20261015/feature/office-frontend/`. Tests fonctionnels : vraie route App/client et frontière HTTP contrôlée ; l’intégration Chromium desktop/mobile avec les vrais quatre composants et PostgreSQL sera vérifiée par le parent après gel des sources.
+
+## Contenu des offres — historique de la version 0.2.0 livrée le 12 octobre 2026
 
 La réservation propose une **description facultative (2 000 caractères maximum)** et une **image facultative par URL HTTP(S)**, transmises à `POST /office-api/management/reservations` ; une réservation reste un brouillon. La liste affiche les deux valeurs textuelles et propose **Modifier le contenu**. `#/offres?promoId=UUID` charge l’offre complète via `GET /office-api/management/promos/{UUID}`, y compris une offre masquée ou en brouillon.
 
@@ -50,7 +86,7 @@ Une génération de session et des `AbortController` empêchent les anciennes le
 
 Les permissions et invariants métier restent contrôlés par le serveur : les confirmations UI ne les remplacent pas. Les erreurs sont françaises et n’affichent ni corps externe brut ni URL/secret upstream.
 
-## Vérification exécutée
+## Vérification historique 0.2.0
 
 ```sh
 bun --bun run test
@@ -80,7 +116,7 @@ Preuves : `../softitrend-feezit-office-backend/docs/parent-verification.json`, `
 Contrat autoritatif : `../softitrend-feezit-office-backend/docs/office-api-contract.md`, complété par `../softitrend-feezit-backend/docs/api-contract.md` et les DTO/controllers lus. Notes Office et participation sous Obsidian consultées ; cadrage et suivi Office actualisés par le parent. Architecture et matrice locale : `docs/architecture.md`.
 
 - Le répertoire des incidents peut fournir `kind` et `openedAt` à `null` ; affichage `—`, aucun type/date/compte à rebours inventé.
-- Pagination serveur pour comptes/offres/incidents ; recherche et pagination locales pour les routes historiques qui renvoient des tableaux entiers. Cela ne réduit pas la taille de ces réponses côté backend.
+- Pagination serveur pour comptes/offres/incidents/outbox ; recherche et pagination locales pour les autres tableaux. Le moniteur email se limite aux100 dernières notifications ; la pagination locale ne réduit pas la taille des réponses historiques côté backend.
 - Pas d’import ni composition/envoi email, d’export, de paiement, de métrique sociale, d’audit nominatif durable ou de restauration automatique de contenu supprimé.
 - L’attestation ne prouve ni fraude, ni accord original, ni réception email ; l’opérateur conserve/examine les preuves par son circuit externe.
 - Une requête annulée dans le navigateur peut avoir déjà été traitée côté serveur : relire avant de réessayer une mutation incertaine. Aucun retry automatique destructif.
@@ -88,9 +124,9 @@ Contrat autoritatif : `../softitrend-feezit-office-backend/docs/office-api-contr
 
 Aucun secret réel dans les sources ou captures, aucun commit/push. Le parent a raccordé les deux backends et mis à jour les notes Office ; les tests isolés sont distincts de la livraison production autorisée ci-dessous.
 
-## Production actuelle — 0.2.0, vérifiée le 12 octobre 2026
+## Dernière production documentée ici — 0.2.0, vérifiée le 12 octobre 2026
 
-Release actuelle `20261012T232115Z-office`, contenu description/image livré et CSP adaptée active. **24 contrôles HTTP publics** et deux vues Chromium publiques réussis, sans mutation métier ; vraie intégration isolée contenu : 79 HTTP + 1 Chromium réussie. Versions 0.2.0 des deux `package.json` relues, images/sources conformes, PostgreSQL V14 pour le Creator Studio livré simultanément. Preuves : `../production/evidence/office-production-verification.json`, `studio-release-verification.json` et `office-public-browser.json`. Le bilan ci-dessous est la livraison initiale historique.
+Release historique `20261012T232115Z-office`, contenu description/image livré et CSP adaptée active au contrôle du 12 octobre ; production non interrogée pour le candidat 0.3.0. **24 contrôles HTTP publics** et deux vues Chromium publiques réussis, sans mutation métier ; vraie intégration isolée contenu : 79 HTTP + 1 Chromium réussie. Versions 0.2.0 des deux `package.json` relues, images/sources conformes, PostgreSQL V14 pour le Creator Studio livré simultanément. Preuves : `../production/evidence/office-production-verification.json`, `studio-release-verification.json` et `office-public-browser.json`. Le bilan ci-dessous est la livraison initiale historique.
 
 ## Production initiale livrée et vérifiée — 12 octobre 2026
 

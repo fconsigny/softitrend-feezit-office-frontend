@@ -7,13 +7,37 @@ import { httpBoundary, promo, response } from "./http.js";
 it("distingue pending d’une émission attestée par le serveur sans déduire une réception", async () => {
   window.location.hash = "#/notifications";
   const http = httpBoundary((url) => {
-    if (url.endsWith("/outbox")) return response(200, [
-      {ID:promo, KIND:"brand_available", DELIVERY_STATUS:"pending", SENT_AT:null, DELIVERY_REFERENCE:null},
-      {ID:"delivery-history-test", KIND:"brand_available", DELIVERY_STATUS:"sent", SENT_AT:"2026-10-01T12:00:00Z", DELIVERY_REFERENCE:"provider-test"},
-    ]);
-    if (url.endsWith("/email-deliveries")) return response(200, [
-      {id:"delivery-test", status:"failed", failureCode:"SMTP_UNAVAILABLE", smtpReference:null},
-    ]);
+    if (url.includes("/outbox-page?"))
+      return response(200, {
+        items: [
+          {
+            id: promo,
+            kind: "brand_available",
+            deliveryStatus: "pending",
+            sentAt: null,
+            deliveryReference: null,
+          },
+          {
+            id: "delivery-history-test",
+            kind: "brand_available",
+            deliveryStatus: "sent",
+            sentAt: "2026-10-01T12:00:00Z",
+            deliveryReference: "provider-test",
+          },
+        ],
+        total: 2,
+        page: 0,
+        size: 20,
+      });
+    if (url.endsWith("/email-deliveries"))
+      return response(200, [
+        {
+          id: "delivery-test",
+          status: "failed",
+          failureCode: "SMTP_UNAVAILABLE",
+          smtpReference: null,
+        },
+      ]);
   });
   render(<App client={createOfficeClient(http)} />);
   expect(await screen.findByText("En attente d’émission")).toBeInTheDocument();
@@ -21,17 +45,40 @@ it("distingue pending d’une émission attestée par le serveur sans déduire u
   expect(await screen.findByText("SMTP_UNAVAILABLE")).toBeInTheDocument();
   expect(screen.getByText("provider-test")).toBeInTheDocument();
   expect(screen.getByText(/ne prouve pas la réception/i)).toBeInTheDocument();
-  expect(http.mock.calls.some(([url, options]) => url.endsWith("/sent") && options.method === "PUT")).toBe(false);
+  expect(
+    http.mock.calls.some(
+      ([url, options]) => url.endsWith("/sent") && options.method === "PUT",
+    ),
+  ).toBe(false);
 });
 it("n’expose pas d’attestation manuelle que le Feezit actuel refuse systématiquement", async () => {
   window.location.hash = "#/notifications";
-  const http = httpBoundary((url) => url.endsWith("/outbox") ? response(200, [{ID:promo, DELIVERY_STATUS:"pending", SENT_AT:null}]) : undefined);
+  const http = httpBoundary((url) =>
+    url.includes("/outbox-page?")
+      ? response(200, {
+          items: [{ id: promo, deliveryStatus: "pending", sentAt: null }],
+          total: 1,
+          page: 0,
+          size: 20,
+        })
+      : undefined,
+  );
   render(<App client={createOfficeClient(http)} />);
   await screen.findByText("En attente d’émission");
-  expect(screen.queryByRole("form", {name:"Attester une émission réelle"})).not.toBeInTheDocument();
-  expect(screen.queryByRole("link", {name:"Attester"})).not.toBeInTheDocument();
-  expect(screen.getByText(/confirmation manuelle indisponible/i)).toBeInTheDocument();
-  expect(http.mock.calls.some(([url, options]) => url.endsWith("/sent") && options.method === "PUT")).toBe(false);
+  expect(
+    screen.queryByRole("form", { name: "Attester une émission réelle" }),
+  ).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole("link", { name: "Attester" }),
+  ).not.toBeInTheDocument();
+  expect(
+    screen.getByText(/confirmation manuelle indisponible/i),
+  ).toBeInTheDocument();
+  expect(
+    http.mock.calls.some(
+      ([url, options]) => url.endsWith("/sent") && options.method === "PUT",
+    ),
+  ).toBe(false);
 });
 it("ne lance les jobs à effets destructifs qu’après confirmation explicite", async () => {
   window.location.hash = "#/notifications";

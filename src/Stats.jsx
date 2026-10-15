@@ -80,8 +80,8 @@ export function Stats({ client, revision, initial }) {
           <div className="panel-heading">
             <h2>Mesures quotidiennes</h2>
             <span className="badge">
-              {displayValue(resource.data.from)} —{" "}
-              {displayValue(resource.data.to)}
+              {displayValue(resource.data.from, { format: "date" })} —{" "}
+              {displayValue(resource.data.to, { format: "date" })}
             </span>
           </div>
           <div className="metrics">
@@ -101,7 +101,7 @@ export function Stats({ client, revision, initial }) {
           <Table
             items={resource.data.daily ?? []}
             columns={[
-              ["date", "Jour UTC"],
+              ["date", "Jour UTC", "date"],
               ["profile_view", "Visites profil"],
               ["promo_outbound", "Sorties promotionnelles"],
             ]}

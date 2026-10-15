@@ -30,8 +30,14 @@ export function httpBoundary(handler = () => undefined, authenticated = true) {
         signedIn ? 200 : 401,
         signedIn ? { username: "francois-test" } : {},
       );
-    if (/\/management\/(accounts|promos|incidents)\?/.test(url))
+    if (/\/management\/(accounts|promos|incidents|outbox-page)\?/.test(url))
       return response(200, { items: [], total: 0, page: 0, size: 20 });
+    if (url.endsWith("/operations-status"))
+      return response(200, {
+        emailTransportEnabled: false,
+        participationJobsEnabled: false,
+        observedAt: "2026-10-13T12:00:00Z",
+      });
     return response(200, []);
   });
 }

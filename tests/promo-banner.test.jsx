@@ -188,9 +188,11 @@ it.each(["en attente", "échoué"])(
     if (state === "échoué")
       await screen.findByText(/Aperçu privé indisponible/);
     expect(window.location.hash).toBe(`#/offres?promoId=${navigationId}`);
-    expect(
-      http.mock.calls.some(([url]) => url === `${detailPath}/banner`),
-    ).toBe(true);
+    await waitFor(() =>
+      expect(
+        http.mock.calls.some(([url]) => url === `${detailPath}/banner`),
+      ).toBe(true),
+    );
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
     expect(puts(http)).toHaveLength(0);
     if (state === "en attente") {
